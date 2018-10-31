@@ -35,11 +35,21 @@ class MyAgent(AlphaBetaAgent):
   search has to stop and false otherwise.
   """
   def cutoff(self, state, depth):
-    return state.game_over() or depth >= 1
+    return state.game_over_check() or depth >= 1
 
   """
   The evaluate function must return an integer value
   representing the utility function of the board.
   """
   def evaluate(self, state):
-    pass
+    isOver, win = state.is_over()
+    if win == self.id: 
+      return 1000
+    else if winn == self.id - 1:
+      return -1000
+      else
+        return nb_ceil(self.id, state) - nb_ceil(self.id - 1, state)
+
+def nb_ceil(id, state):
+  return 0
+
