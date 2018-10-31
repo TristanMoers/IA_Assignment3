@@ -45,9 +45,9 @@ class MyAgent(AlphaBetaAgent):
     isOver, win = state.is_over()
     if win == self.id: 
       return 1000
-    else if winn == self.id - 1:
-      return -1000
-      else
+    elif win == self.id - 1:
+        return -1000
+    else:
         return nb_ceil(self.id, state) - nb_ceil(self.id - 1, state)
 
 def nb_ceil(id, state):
