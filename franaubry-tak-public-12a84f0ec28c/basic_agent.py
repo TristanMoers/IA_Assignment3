@@ -35,7 +35,7 @@ class MyAgent(AlphaBetaAgent):
   search has to stop and false otherwise.
   """
   def cutoff(self, state, depth):
-    return state.game_over_check() or depth >= 1
+    return state.game_over_check() or depth == 1
 
   """
   The evaluate function must return an integer value
@@ -43,13 +43,11 @@ class MyAgent(AlphaBetaAgent):
   """
   def evaluate(self, state):
     isOver, win = state.is_over()
-    if win == self.id: 
-      return 1000
-    elif win == self.id - 1:
-        return -1000
+    if isOver:
+        if state.get_winner() == self.id:
+            return 1000
+        elif state.get_winner() == 1 - self.id:
+            return -1000
     else:
-        return nb_ceil(self.id, state) - nb_ceil(self.id - 1, state)
-
-def nb_ceil(id, state):
-  return 0
+        return state.control_count()[self.id] - state.control_count()[1-self.id]
 
