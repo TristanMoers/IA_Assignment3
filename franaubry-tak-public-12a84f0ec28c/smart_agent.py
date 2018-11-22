@@ -55,7 +55,7 @@ class MyAgent(AlphaBetaAgent):
         else:
 
             """return state.control_count()[self.id] - state.control_count()[1-self.id] + self.strategy1(state)"""
-            return self.strategy2(state)
+            return state.control_count()[self.id] - state.control_count()[1-self.id] + self.strategy2(state)
 
     def strategy1(self, state):
         count = 0
@@ -147,9 +147,9 @@ class MyAgent(AlphaBetaAgent):
         if count_row_adv >= count_row > count_prev_row:
             if t is not None:
                 if t[0] == 1:
-                    count_row += 15 + count_row_adv - count_row
+                    count_row += 15 + count_row
                 else:
-                    count_row += 10 + count_row_adv - count_row
+                    count_row += 5 + count_row
 
         #column
         count_column = 0
@@ -167,17 +167,21 @@ class MyAgent(AlphaBetaAgent):
         if count_column_adv >= count_column > count_prev_column:
             if t is not None:
                 if t[0] == 1:
-                    count_column += 15 + count_column_adv - count_column
+                    count_column += 15 + count_column
                 else:
-                    count_column += 10 + count_column_adv - count_column
+                    count_column += 5 + count_column
 
         if count_row > utility:
             utility = count_row
         if count_column > utility:
             utility = count_column
+
         if t is not None and not self.has_cap_stone_prev(state):
             if t[0] == 2:
                 utility += 20
+
+        if r == 2 and c == 2:
+            utility += 15
 
         self.prev_state = state
 
@@ -187,7 +191,6 @@ class MyAgent(AlphaBetaAgent):
         return utility
 
     def get_new_element(self, state):
-
         if self.prev_state is not None:
             for i in range(0, state.size -1):
                 for j in range(0, state.size - 1):
