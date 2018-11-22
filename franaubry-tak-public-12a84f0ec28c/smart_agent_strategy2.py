@@ -55,7 +55,7 @@ class MyAgent(AlphaBetaAgent):
         else:
 
             """return state.control_count()[self.id] - state.control_count()[1-self.id] + self.strategy1(state)"""
-            return state.control_count()[self.id] - state.control_count()[1-self.id] + self.strategy1(state)
+            return state.control_count()[self.id] - state.control_count()[1-self.id] + self.strategy2(state)
 
     def strategy1(self, state):
         count = 0
