@@ -61,12 +61,12 @@ class MyAgent(AlphaBetaAgent):
         count = 0
         grid = state.board
 
-        for i in range(0, state.get_size()-1):
+        for i in range(0, state.size):
             count_row = 0
             count_row_adv = 0
             count_col = 0
             count_col_adv = 0
-            for j in range(0,4):
+            for j in range(0,state.size):
                 if state.is_controlled_by(i, j, self.id):
                     count_row = count_row +1
                     t = state.get_top_piece(i, j)
@@ -90,14 +90,14 @@ class MyAgent(AlphaBetaAgent):
                 if state.is_controlled_by(j, i, 1-self.id):
                     count_col_adv += 1
                 if count_row_adv > count_row and j == state.get_size()-1:
-                    for k in range (0, state.get_size()-1):
+                    for k in range (0, state.size):
                         t = state.get_top_piece(i, k)
                         if t is not None:
                             if state.is_controlled_by(i, k, self.id) and t[0] == 1:
                                 count_row += 30
                                 print("youlou defense")
                 if count_col_adv > count_col and i == state.get_size()-1:
-                    for k in range(0,state.get_size()-1):
+                    for k in range(0,state.size):
                         t = state.get_top_piece(k, i)
                         if t is not None:
                             if state.is_controlled_by(k, i, self.id) and t[0] == 1:
@@ -133,9 +133,10 @@ class MyAgent(AlphaBetaAgent):
 
         #row
         count_row = 0
+        point_row = 0
         count_prev_row = 0
         count_row_adv = 0
-        for i in range(0, state.size - 1):
+        for i in range(0, state.size):
             if state.is_controlled_by(i, c, self.id):
                 count_row += 1
             if state.is_controlled_by(i, c, 1-self.id):
@@ -147,15 +148,26 @@ class MyAgent(AlphaBetaAgent):
         if count_row_adv >= count_row > count_prev_row:
             if t is not None:
                 if t[0] == 1:
-                    count_row += 15 + count_row
+                    point_row += 15 + count_row
                 else:
-                    count_row += 5 + count_row
+                    point_row += 5 + count_row
+        if count_row >= 2 >= count_row_adv:
+            point_row += 5
+            if count_row_adv == 1:
+                point_row += 2
+            if count_row_adv == 0:
+                point_row += 5
+            if count_row >= 3:
+                point_row += 10
+            if count_row + count_row_adv == state.size -1:
+                point_row += 10
 
         #column
         count_column = 0
+        point_column = 0
         count_prev_column = 0
         count_column_adv = 0
-        for j in range(0, state.size - 1):
+        for j in range(0, state.size):
             if state.is_controlled_by(r, j, self.id):
                 count_column += 1
             if state.is_controlled_by(r, j, 1-self.id):
@@ -167,14 +179,24 @@ class MyAgent(AlphaBetaAgent):
         if count_column_adv >= count_column > count_prev_column:
             if t is not None:
                 if t[0] == 1:
-                    count_column += 15 + count_column
+                    point_column += 15 + count_column
                 else:
-                    count_column += 5 + count_column
+                    point_column += 5 + count_column
+        if count_column >= 2 >= count_column_adv:
+            point_column += 5
+            if count_column_adv == 1:
+                point_column += 2
+            if count_column_adv == 0:
+                point_column += 5
+            if count_column >= 3:
+                point_column += 10
+            if count_column_adv + count_column == state.size -1:
+                point_column += 10
 
-        if count_row > utility:
-            utility = count_row
-        if count_column > utility:
-            utility = count_column
+        if point_row > utility:
+            utility = point_row
+        if point_column > utility:
+            utility = point_column
 
         if t is not None and not self.has_cap_stone_prev(state):
             if t[0] == 2:
@@ -187,6 +209,10 @@ class MyAgent(AlphaBetaAgent):
 
         if state.check_vertical_path(self.id) or state.check_horizontal_path(self.id):
             utility += 50
+
+        if state.check_vertical_path(1-self.id) or state.check_horizontal_path(1-self.id):
+            utility = -50
+        utility += self.defense(state)
         print(utility)
         return utility
 
@@ -198,3 +224,26 @@ class MyAgent(AlphaBetaAgent):
                         t = (i, j)
                         return t
         return None
+
+    def defense(self, state):
+
+        for i in range(0, state.size):
+            count_row = 0
+            count_row_adv = 0
+            count_col = 0
+            count_col_adv = 0
+            for j in range(0, state.size):
+                if state.is_controlled_by(i, j, self.id):
+                    count_row += 1
+                if state.is_controlled_by(i, j, 1 - self.id):
+                    count_row_adv += 1
+                if state.is_controlled_by(j, i, self.id):
+                    count_col += 1
+                if state.is_controlled_by(j, i, 1-self.id):
+                    count_col_adv += 1
+
+                if j == state.size - 1 and count_row_adv == state.size - 1 and count_row == 1:
+                    return 100
+                if i == state.size - 1 and count_col_adv == state.size - 1 and count_col == 1:
+                    return 100
+        return 0
