@@ -243,12 +243,11 @@ class MyAgent(AlphaBetaAgent):
 
                 if j == state.size - 1 and count_row_adv == state.size - 1 and count_row == 1:
                     add += 100
-                if i == state.size - 1 and count_col_adv == state.size - 1 and count_col == 1:
-                    #ne rentre jamais ici, pas normal
+                if j == state.size - 1 and count_col_adv == state.size - 1 and count_col == 1:
                     add += 100
                 if j == state.size - 1 and count_row_adv == state.size - 2 and count_row >= 1:
                     add += 100
-                if i == state.size - 1 and count_col_adv == state.size - 2 and count_col >= 1:
+                if j == state.size - 1 and count_col_adv == state.size - 2 and count_col >= 1:
                     add += 100
 
         return add
