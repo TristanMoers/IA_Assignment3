@@ -136,7 +136,11 @@ def run_tournament_match(initial_state, groups, logger, total_time):
 
 def make_match(initial_state, agents, time, logger):
     names = [a.get_name() for a in agents]
-    return play_game(initial_state, names, agents, time, False, logger)
+    if agents[0].id == 0:
+      return play_game(initial_state, names, agents, time, False, logger)
+    else:
+      agents.reverse()
+      return play_game(initial_state, names, agents, time, False, logger)
 
 def make_n_matches(initial_state, agents, logger):
     names = [a.get_name() for a in agents]

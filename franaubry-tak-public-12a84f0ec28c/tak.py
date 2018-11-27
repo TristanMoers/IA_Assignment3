@@ -249,11 +249,12 @@ class TakState(State):
       if not tmp.get_data_tuple() in self.history:
         actions.append(place_action)
     # gather all move actions
-    for move_action in self.get_move_actions():
-      tmp = self.copy()
-      tmp.apply_action(move_action)
-      if not tmp.get_data_tuple() in self.history:
-        actions.append(move_action)
+    if self.turn >= 3:
+      for move_action in self.get_move_actions():
+        tmp = self.copy()
+        tmp.apply_action(move_action)
+        if not tmp.get_data_tuple() in self.history:
+          actions.append(move_action)
     return actions
   
   """
@@ -352,8 +353,9 @@ class TakState(State):
     over, winner = self.is_over()
     if over:
       self.winner = winner
-    self.cur_player = 1 - self.cur_player
-    self.turn += 1
+    else:
+      self.cur_player = 1 - self.cur_player
+      self.turn += 1
 
   """
   Return the scores of each players.
@@ -403,6 +405,7 @@ class TakState(State):
     delta_c = abs(c_orig - c_dest)
     if delta_r + delta_c != 1: return False
     piece_type, _ = self.board[r_dest][c_dest].top()
+    if piece_type == CAP_STONE: return False
     if piece_type != STANDING_STONE: return True
     piece_type, _ = self.board[r_orig][c_orig].top()
     return k == 1 and piece_type == CAP_STONE

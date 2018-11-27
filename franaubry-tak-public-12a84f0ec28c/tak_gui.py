@@ -539,12 +539,14 @@ class TakGUI(GUI):
 
   def finish_human_action(self):
     action = self.gui_state.action
+    self.last_action = action
     self.state.apply_action(action)
     self.gui_state = GUIState(self)
     self.buttons['finish'].set_active(False)
 
   def handle_ai_action(self, action):
     if self.state.is_action_valid(action):
+      self.last_action = action
       self.state.apply_action(action)
       self.gui_state = GUIState(self)
       
