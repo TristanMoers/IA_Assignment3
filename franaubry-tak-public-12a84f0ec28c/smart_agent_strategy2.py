@@ -23,23 +23,20 @@ class MyAgent(AlphaBetaAgent):
     pairs (a, s) in which a is the action played to reach the
     state s.
     """
+
     def successors(self, state):
         actions = state.get_current_player_actions()
-        actions_state = list()
         for action in actions:
-            if state.is_action_valid(action):
-                Nstate = state.copy()
-                Nstate.apply_action(action)
-                actions_state.append((action, Nstate))
-        for a in actions_state:
-            yield a
+            Nstate = state.copy()
+            Nstate.apply_action(action)
+            yield (action, Nstate)
 
     """
     The cutoff function returns true if the alpha-beta/minimax
     search has to stop and false otherwise.
     """
     def cutoff(self, state, depth):
-        return state.game_over_check() or depth == 1
+        return state.game_over_check() or depth == 2
 
     """
     The evaluate function must return an integer value
@@ -55,7 +52,7 @@ class MyAgent(AlphaBetaAgent):
         else:
 
             """return state.control_count()[self.id] - state.control_count()[1-self.id] + self.strategy1(state)"""
-            return state.control_count()[self.id] - state.control_count()[1-self.id] + self.strategy2(state)
+            return self.strategy2(state)
 
     def strategy1(self, state):
         count = 0

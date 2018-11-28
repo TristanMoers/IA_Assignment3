@@ -25,14 +25,10 @@ class MyAgent(AlphaBetaAgent):
     """
     def successors(self, state):
         actions = state.get_current_player_actions()
-        actions_state = list()
         for action in actions:
-            if state.is_action_valid(action):
-                Nstate = state.copy()
-                Nstate.apply_action(action)
-                actions_state.append((action, Nstate))
-        for a in actions_state:
-            yield a
+            Nstate = state.copy()
+            Nstate.apply_action(action)
+            yield (action, Nstate)
 
     """
     The cutoff function returns true if the alpha-beta/minimax
